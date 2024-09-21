@@ -5,6 +5,7 @@ import { RegisterUserSchema } from "./dto";
 import { AuthRepository } from "./repository";
 import { AuthUseCase } from "./usecase";
 import { db } from "../../utils/db";
+import { verifyToken } from "../../middleware/validateToken";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.post(
   validate({ body: RegisterUserSchema }),
   authController.register
 );
+router.get("/me", verifyToken, authController.me);
 
 export default router;

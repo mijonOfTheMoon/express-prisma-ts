@@ -22,5 +22,11 @@ export const LoginUserSchema = z.object({
 export type LoginUserRequestDto = z.infer<typeof LoginUserSchema>;
 
 export type LoginUserResponseDto = {
+  user : GetMeResponseDto;
+  token: string;
+};
+
+export type GetMeResponseDto = {
   email: string;
+  name: string | null;
 };

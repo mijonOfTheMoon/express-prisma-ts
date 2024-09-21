@@ -4,6 +4,7 @@ import { RegisterUserDomain } from "./domain";
 export interface IAuthRepository {
   createUser: (data: RegisterUserDomain) => Promise<User>;
   findUserByEmail: (email: string) => Promise<User | null>; // Specify that it may return null if no user is found
+  findUserById: (id: number) => Promise<User | null>; // Specify that it may return null if no user is found
 }
 
 export class AuthRepository implements IAuthRepository {
@@ -22,6 +23,14 @@ export class AuthRepository implements IAuthRepository {
     return await this.db.user.findUnique({
       where: {
         email,
+      },
+    });
+  }
+
+  async findUserById(id: number): Promise<User | null> {
+    return await this.db.user.findUnique({
+      where: {
+        id,
       },
     });
   }

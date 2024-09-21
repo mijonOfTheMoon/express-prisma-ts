@@ -1,14 +1,18 @@
 import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { LoginUserRequestDto, LoginUserResponseDto, RegisterUserRequestDto, RegisterUserResponseDto } from './dto';
+import { GetMeResponseDto, LoginUserRequestDto, LoginUserResponseDto, RegisterUserRequestDto, RegisterUserResponseDto } from './dto';
 import { IAuthRepository } from './repository';
-import { throwError } from '../../utils/error';
+import { ApiErrorClass } from '../../utils/error';
+import jwt from 'jsonwebtoken';
 
 export interface IAuthUseCase {
     hashPassword: (password: string) => Promise<string>;
     comparePassword: (password: string, hashedPassword: string) => Promise<boolean>;
     findUserByEmail: (email: string) => Promise<User | null>;
+    findUserById: (id: number) => Promise<User | null>;
     registerUser: (data: RegisterUserRequestDto) => Promise<RegisterUserResponseDto>;    
+    loginUser: (data: LoginUserRequestDto) => Promise<LoginUserResponseDto>;
+    getUser: (id: number) => Promise<GetMeResponseDto>;
 }
 
 export class AuthUseCase implements IAuthUseCase {
@@ -30,10 +34,14 @@ export class AuthUseCase implements IAuthUseCase {
         return await this.repository.findUserByEmail(email);
     }
 
+    async findUserById(id: number): Promise<User | null> {
+        return await this.repository.findUserById(id);
+    }
+
     async registerUser(data: RegisterUserRequestDto): Promise<RegisterUserResponseDto> {
         const check = await this.findUserByEmail(data.email);
         if (check) {
-            throwError(400, 'User already exists');
+            throw new ApiErrorClass(false, 400, 'User already exists');
         }
 
         const hashedPassword = await this.hashPassword(data.password);
@@ -54,17 +62,38 @@ export class AuthUseCase implements IAuthUseCase {
     async loginUser(data: LoginUserRequestDto): Promise<LoginUserResponseDto> {
         const user = await this.findUserByEmail(data.email);
         if (!user) {
-            throw new Error('User not found');
+            throw new ApiErrorClass(false, 404, 'User not found');
         }
 
         const match = await this.comparePassword(data.password, user.password);
         if (!match) {
-            throw new Error('Invalid password');
+            throw new ApiErrorClass(false, 400, 'Invalid Password');
         }
 
+        const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY || 'secret', {
+            expiresIn: '3d',
+        });
+
         return {
-            email: user.email,
+            user : {
+                email: user.email,
+                name: user.name,
+            },
+            token,
         };
     }
 
+    async getUser(id: number): Promise<GetMeResponseDto> {
+        const user = await this.findUserById(id);
+        if (!user) {
+            throw new ApiErrorClass(false, 404, 'User not found');
+        }
+
+        const res : GetMeResponseDto = {
+            email: user.email,
+            name: user.name,
+        };
+
+        return res;
+    }
 }

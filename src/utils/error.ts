@@ -18,8 +18,3 @@ export class ApiErrorClass extends Error {
     Object.setPrototypeOf(this, ApiErrorClass.prototype);
   }
 }
-
-// Example function to throw an error
-export const throwError = (statusCode: number, message: string): never => {
-  throw new ApiErrorClass(false, statusCode, message);
-};
