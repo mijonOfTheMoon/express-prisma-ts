@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IAuthUseCase } from "./usecase";
 import { ApiErrorClass } from "../../utils/error";
 import { errorResponse, successResponse } from "../../utils/response";
-import { RequestWithAuth } from "../common/interfaces";
+import { RequestWithAuth } from "../../types/interfaces";
 
 export class AuthController {
   private authUseCase: IAuthUseCase;

@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { errorResponse } from "../utils/response";
-import { RequestWithAuth } from "../modules/common/interfaces";
+import { RequestWithAuth } from "../types/interfaces";
 
 export const verifyToken = (req: RequestWithAuth, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
