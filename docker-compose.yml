@@ -1,7 +1,6 @@
 services:
   api:
     image: ghcr.io/mijonofthemoon/express-prisma-ts:main
-    container_name: api
     restart: always
     ports:
       - ${APP_PORT}:${APP_PORT}
