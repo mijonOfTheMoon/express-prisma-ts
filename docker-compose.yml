@@ -1,17 +1,11 @@
-version: '3.8'
-
 services:
-  db:
-    image: postgres:13
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: exampledb
+  api:
+    image: ghcr.io/mijonofthemoon/express-prisma-ts:main
+    container_name: api
+    restart: always
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
+      - ${{ vars.APP_PORT }}:${{ vars.APP_PORT }}
+    environment:
+      - SECRET_KEY=${{ secrets.SECRET_KEY }}
+      - DATABASE_URL=${{ secrets.DATABASE_URL }}
+      - APP_PORT=${{ vars.APP_PORT }}
