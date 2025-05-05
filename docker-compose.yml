@@ -4,7 +4,7 @@ services:
     container_name: api
     restart: always
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - ${APP_PORT}:${APP_PORT}
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=${DATABASE_URL}
