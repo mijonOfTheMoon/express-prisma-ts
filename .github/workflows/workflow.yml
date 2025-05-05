@@ -89,5 +89,5 @@ jobs:
       - name: Docker compose deployment
         run: |
           docker pull ${{ steps.meta.outputs.tags }}
-          docker compose -p aibeecara up -d
+          docker compose --project-name aibeecara up -d
           docker system prune -af
