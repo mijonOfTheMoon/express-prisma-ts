@@ -4,8 +4,8 @@ services:
     container_name: api
     restart: always
     ports:
-      - ${{ vars.APP_PORT }}:${{ vars.APP_PORT }}
+      - ${APP_PORT}:${APP_PORT}
     environment:
-      - SECRET_KEY=${{ secrets.SECRET_KEY }}
-      - DATABASE_URL=${{ secrets.DATABASE_URL }}
-      - APP_PORT=${{ vars.APP_PORT }}
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - APP_PORT=${APP_PORT}

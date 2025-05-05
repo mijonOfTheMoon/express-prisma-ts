@@ -87,6 +87,10 @@ jobs:
             password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Docker compose deployment
+        env:
+          APP_PORT: ${{ secrets.APP_PORT }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           docker pull ${{ steps.meta.outputs.tags }}
           docker-compose -p aibeecara up -d
