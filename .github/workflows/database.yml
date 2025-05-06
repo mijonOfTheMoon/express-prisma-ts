@@ -1,0 +1,14 @@
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+
+  migrate:
+
+    runs-on: main
+          
+    steps:
+      
+      - name: Sinkronisasi schema prisma pada database
+        run: docker run --rm -v /var/aibeecara/migrate.sh:/migrate.sh node:20-alpine sh -c "./migrate.sh"
